@@ -1,4 +1,9 @@
-import { Geist_Mono, Inter } from "next/font/google"
+import {
+  Geist_Mono,
+  Gowun_Batang,
+  Instrument_Serif,
+  Inter,
+} from "next/font/google"
 
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
@@ -9,6 +14,18 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-sans" })
 const fontMono = Geist_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
+})
+
+const instrumentSerif = Instrument_Serif({
+  subsets: ["latin"],
+  weight: "400",
+  variable: "--font-serif",
+})
+
+const gowunBatang = Gowun_Batang({
+  subsets: ["latin"],
+  weight: "700",
+  variable: "--font-kr-serif",
 })
 
 export default function RootLayout({
@@ -24,7 +41,9 @@ export default function RootLayout({
         "antialiased",
         fontMono.variable,
         "font-sans",
-        inter.variable
+        inter.variable,
+        instrumentSerif.variable,
+        gowunBatang.variable
       )}
     >
       <body>
