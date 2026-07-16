@@ -1,0 +1,53 @@
+/* Toast UI's shipped viewer CSS hardcodes light-mode text/background
+   colors (e.g. #222 body text, #555 table headers), which is unreadable
+   against our dark theme. Repoint the content-affecting rules at our own
+   tokens instead of the editor's built-in theme. */
+.toastui-editor-contents {
+  color: var(--foreground);
+}
+
+.toastui-editor-contents p,
+.toastui-editor-contents h1,
+.toastui-editor-contents h2,
+.toastui-editor-contents h3,
+.toastui-editor-contents h4,
+.toastui-editor-contents h5,
+.toastui-editor-contents h6,
+.toastui-editor-contents li,
+.toastui-editor-contents blockquote {
+  color: inherit;
+}
+
+.toastui-editor-contents a {
+  color: var(--signal);
+}
+
+.toastui-editor-contents blockquote {
+  border-left-color: var(--border);
+  color: var(--muted-foreground);
+}
+
+.toastui-editor-contents code {
+  background-color: var(--muted);
+  color: var(--foreground);
+}
+
+.toastui-editor-contents pre,
+.toastui-editor-contents pre code {
+  background-color: var(--muted);
+  color: var(--foreground);
+}
+
+.toastui-editor-contents table th {
+  background-color: var(--muted);
+  color: var(--foreground);
+}
+
+.toastui-editor-contents table td,
+.toastui-editor-contents table th {
+  border-color: var(--border);
+}
+
+.toastui-editor-contents hr {
+  border-color: var(--border);
+}
