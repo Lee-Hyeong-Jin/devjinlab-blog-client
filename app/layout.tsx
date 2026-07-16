@@ -7,6 +7,7 @@ import {
 
 import "./globals.css"
 import { GrainOverlay } from "@/components/grain-overlay"
+import { Header } from "@/components/layout/header"
 import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@/lib/utils"
 
@@ -50,6 +51,7 @@ export default function RootLayout({
       <body>
         <ThemeProvider>
           <GrainOverlay />
+          <Header />
           {children}
         </ThemeProvider>
       </body>
