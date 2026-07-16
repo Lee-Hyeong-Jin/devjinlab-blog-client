@@ -19,7 +19,11 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@toast-ui/editor": ["./node_modules/@toast-ui/editor/types/index.d.ts"],
+      "@toast-ui/editor/dist/toastui-editor-viewer": [
+        "./node_modules/@toast-ui/editor/types/toastui-editor-viewer.d.ts"
+      ]
     }
   },
   "include": [
