@@ -1,8 +1,8 @@
 import Link from "next/link"
 
-import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { MobileNav } from "@/components/layout/mobile-nav"
+import { UserMenu } from "@/components/layout/user-menu"
 
 const menu_items = [
   { id: 0, name: "카테고리", href: "/categories" },
@@ -10,7 +10,7 @@ const menu_items = [
   { id: 2, name: "devjinlab.com", href: "https://devjinlab.com" },
 ] as const
 
-export function Header() {
+export async function Header() {
   return (
     <header className="sticky top-0 z-50 bg-background/70 backdrop-blur-xl">
       <div className="relative mx-auto flex max-w-5xl items-center justify-between gap-2 px-4 py-3 sm:gap-6 sm:px-6">
@@ -39,13 +39,7 @@ export function Header() {
         <div className="flex shrink-0 items-center gap-2">
           <MobileNav menu_items={menu_items} />
           <ThemeToggle />
-          <Button
-            asChild
-            size="sm"
-            className="px-4 font-mono text-xs sm:text-[13px]"
-          >
-            <Link href="/login">로그인</Link>
-          </Button>
+          <UserMenu />
         </div>
       </div>
     </header>
