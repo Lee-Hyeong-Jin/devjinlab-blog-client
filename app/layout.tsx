@@ -6,6 +6,7 @@ import {
 } from "next/font/google"
 
 import "./globals.css"
+import { GrainOverlay } from "@/components/grain-overlay"
 import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@/lib/utils"
 
@@ -47,7 +48,10 @@ export default function RootLayout({
       )}
     >
       <body>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <GrainOverlay />
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   )
