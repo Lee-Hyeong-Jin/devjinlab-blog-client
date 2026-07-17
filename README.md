@@ -40,6 +40,7 @@ cp .env.example .env.local
 | `NEXT_PUBLIC_SUPABASE_URL` | Supabase 프로젝트 URL (로컬은 `supabase start` 출력의 `API_URL`) |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anon key |
 | `ADMIN_EMAIL` | 글쓰기 권한을 가질 관리자 이메일. `supabase/migrations`의 `is_admin()` 함수에 하드코딩된 값과 반드시 동일해야 함 |
+| `NEXT_PUBLIC_SITE_URL` | (선택) 매직링크/OAuth 콜백에 쓰이는 기준 URL. 비워두면 `window.location.origin`을 사용하므로 로컬에서는 필요 없지만, 배포 시 `https://blog.devjinlab.com`으로 명시적으로 설정 권장. 이 값(+`/auth/callback`)은 Supabase 대시보드의 Authentication > URL Configuration > Redirect URLs에도 반드시 등록해야 함 — 등록돼 있지 않으면 GoTrue가 요청을 무시하고 자체 설정된 Site URL로 조용히 되돌아감 |
 
 ### 개발 서버 실행
 
