@@ -21,8 +21,13 @@ export async function generateMetadata({
   const { slug } = await params
   const post = await getPublishedPostBySlug(slug)
 
+  // Once notFound() actually produces a real 404 (see app/not-found.tsx),
+  // Next discards this route's metadata in favor of the not-found segment's
+  // own — so a custom title here would never actually be shown. Falling
+  // back to the layout's default is honest about that instead of implying
+  // this branch does something it doesn't.
   if (!post) {
-    return { title: "글을 찾을 수 없습니다" }
+    return {}
   }
 
   const description = post.excerpt ?? undefined
