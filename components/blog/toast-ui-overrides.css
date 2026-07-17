@@ -32,6 +32,14 @@
   color: var(--muted-foreground);
 }
 
+/* .toastui-editor-contents p/ul/ol/table each *also* hardcode color: #222
+   directly at the same specificity as the blanket .toastui-editor-contents
+   rule above, so that rule alone doesn't reach them — confirmed by reading
+   toastui-editor-viewer.css directly, the same class of bug as the editor
+   surface fix above, just a different set of selectors (list and table body
+   text, not the editing surface). Needs every one of these selectors listed
+   explicitly; a shorter list (e.g. omitting ul/ol/table) leaves that markup
+   unreadable again. */
 .toastui-editor-contents p,
 .toastui-editor-contents h1,
 .toastui-editor-contents h2,
@@ -40,6 +48,9 @@
 .toastui-editor-contents h5,
 .toastui-editor-contents h6,
 .toastui-editor-contents li,
+.toastui-editor-contents ul,
+.toastui-editor-contents ol,
+.toastui-editor-contents table,
 .toastui-editor-contents blockquote {
   color: inherit;
 }
