@@ -38,7 +38,10 @@ export const MarkdownEditor = React.forwardRef<
       initialValue,
       useCommandShortcut: true,
       hooks: {
-        addImageBlobHook: async (blob, callback) => {
+        addImageBlobHook: async (
+          blob: Blob | File,
+          callback: (url: string, altText?: string) => void
+        ) => {
           try {
             const supabase = createClient()
             const extension =
