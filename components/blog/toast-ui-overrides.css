@@ -1,9 +1,35 @@
-/* Toast UI's shipped viewer CSS hardcodes light-mode text/background
-   colors (e.g. #222 body text, #555 table headers), which is unreadable
-   against our dark theme. Repoint the content-affecting rules at our own
-   tokens instead of the editor's built-in theme. */
+/* Toast UI's shipped CSS hardcodes light-mode text/background colors
+   (e.g. #222 body text, #555 table headers), which is unreadable against
+   our dark theme. Repoint the content-affecting rules at our own tokens
+   instead of the editor's built-in theme. */
 .toastui-editor-contents {
   color: var(--foreground);
+}
+
+/* .toastui-editor-main-container hardcodes color: #222 directly (not just
+   inherited from .toastui-editor-contents), which is what the actual
+   markdown *source* editing surface (.ProseMirror inside
+   .toastui-editor-md-container) inherits its text color from — confirmed
+   by walking the computed style up the DOM in a real browser: every
+   ancestor correctly had our --foreground color until this exact
+   container, which is what made typed text nearly invisible against the
+   dark background specifically (#222 on #161a22). This is the editing
+   surface, not rendered output, so it's a separate rule from
+   .toastui-editor-contents above. */
+.toastui-editor-main-container {
+  color: var(--foreground);
+}
+
+/* .ProseMirror itself *also* hardcodes color: #222 directly (not just
+   inherited from .toastui-editor-main-container above) — both rules are
+   needed; the container-level fix alone left the actual editing surface
+   still at #222 on our dark background. */
+.ProseMirror {
+  color: var(--foreground);
+}
+
+.ProseMirror .placeholder {
+  color: var(--muted-foreground);
 }
 
 .toastui-editor-contents p,

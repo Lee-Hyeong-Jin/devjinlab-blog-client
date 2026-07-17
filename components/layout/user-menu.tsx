@@ -10,6 +10,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { SignOutButton } from "@/components/layout/sign-out-button"
 import { isAdminEmail } from "@/lib/auth/is-admin"
 import { createClient } from "@/lib/supabase/server"
 
@@ -77,11 +78,7 @@ export async function UserMenu() {
             </DropdownMenuItem>
           )}
           <DropdownMenuItem asChild>
-            <form action="/auth/signout" method="post" className="w-full">
-              <button type="submit" className="w-full text-left">
-                로그아웃
-              </button>
-            </form>
+            <SignOutButton />
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
