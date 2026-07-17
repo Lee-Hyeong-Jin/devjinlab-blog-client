@@ -34,7 +34,11 @@ export const MarkdownEditor = React.forwardRef<
       el: containerRef.current,
       height: "600px",
       initialEditType: "markdown",
-      previewStyle: "vertical",
+      // Markdown-only: no WYSIWYG mode, and the split preview pane isn't
+      // needed while writing — "tab" keeps a Preview tab available on
+      // demand instead of permanently splitting the width in half.
+      hideModeSwitch: true,
+      previewStyle: "tab",
       initialValue,
       useCommandShortcut: true,
       hooks: {
