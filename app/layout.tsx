@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import {
   Geist_Mono,
   Gowun_Batang,
@@ -10,6 +11,26 @@ import { GrainOverlay } from "@/components/grain-overlay"
 import { Header } from "@/components/layout/header"
 import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@/lib/utils"
+
+const SITE_URL = "https://blog.devjinlab.com"
+const SITE_DESCRIPTION = "개발하며 정리한 생각을 기록하는 공간입니다."
+
+export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
+  title: { default: "devjinlab blog", template: "%s | devjinlab blog" },
+  description: SITE_DESCRIPTION,
+  openGraph: {
+    type: "website",
+    siteName: "devjinlab blog",
+    title: "devjinlab blog",
+    description: SITE_DESCRIPTION,
+  },
+  twitter: {
+    card: "summary",
+    title: "devjinlab blog",
+    description: SITE_DESCRIPTION,
+  },
+}
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" })
 
@@ -37,7 +58,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="ko"
       suppressHydrationWarning
       className={cn(
         "antialiased",

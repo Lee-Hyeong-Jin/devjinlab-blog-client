@@ -1,3 +1,5 @@
+import { cache } from "react"
+
 import { createClient } from "@/lib/supabase/server"
 
 export type PostSummary = {
@@ -132,6 +134,27 @@ export async function getPublishedPosts({
   }
 }
 
+// For the sitemap — every published post's slug in one unbounded query
+// rather than paging through getPublishedPosts, since a personal blog's
+// post count doesn't warrant it and the sitemap needs all of them anyway.
+export async function getAllPublishedPostSlugs(): Promise<
+  { slug: string; publishedAt: string | null }[]
+> {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from("posts")
+    .select("slug, published_at")
+    .eq("status", "published")
+    .order("published_at", { ascending: false })
+
+  if (error) throw error
+
+  return (data ?? []).map((row) => ({
+    slug: row.slug,
+    publishedAt: row.published_at,
+  }))
+}
+
 export type AdminPostRecord = {
   id: string
   slug: string
@@ -197,22 +220,28 @@ export async function getPostById(id: string): Promise<AdminPostRecord | null> {
   }
 }
 
-export async function getPublishedPostBySlug(
-  slug: string
-): Promise<PostDetail | null> {
-  const supabase = await createClient()
-  const { data, error } = await supabase
-    .from("posts")
-    .select(
-      `${POST_SUMMARY_FIELDS}, content_md, category:categories(name, slug)`
-    )
-    .eq("slug", slug)
-    .eq("status", "published")
-    .maybeSingle()
+// Wrapped in React's cache() because generateMetadata and the page component
+// both need this post: without it, that'd be two separate DB round trips per
+// request (Next only auto-dedupes plain fetch() calls, not Supabase client
+// calls) for what's the same read within the same render pass.
+export const getPublishedPostBySlug = cache(
+  async function getPublishedPostBySlug(
+    slug: string
+  ): Promise<PostDetail | null> {
+    const supabase = await createClient()
+    const { data, error } = await supabase
+      .from("posts")
+      .select(
+        `${POST_SUMMARY_FIELDS}, content_md, category:categories(name, slug)`
+      )
+      .eq("slug", slug)
+      .eq("status", "published")
+      .maybeSingle()
 
-  if (error) throw error
-  if (!data) return null
+    if (error) throw error
+    if (!data) return null
 
-  const row = data as unknown as PostRow
-  return { ...toPostSummary(row), contentMd: row.content_md ?? "" }
-}
+    const row = data as unknown as PostRow
+    return { ...toPostSummary(row), contentMd: row.content_md ?? "" }
+  }
+)
