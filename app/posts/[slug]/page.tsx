@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { format } from "date-fns"
@@ -11,6 +12,40 @@ import { isAdminEmail } from "@/lib/auth/is-admin"
 import { getCommentsByPostId } from "@/lib/blog/comments"
 import { getPublishedPostBySlug } from "@/lib/blog/posts"
 import { createClient } from "@/lib/supabase/server"
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>
+}): Promise<Metadata> {
+  const { slug } = await params
+  const post = await getPublishedPostBySlug(slug)
+
+  if (!post) {
+    return { title: "글을 찾을 수 없습니다" }
+  }
+
+  const description = post.excerpt ?? undefined
+  const images = post.coverImageUrl ? [post.coverImageUrl] : undefined
+
+  return {
+    title: post.title,
+    description,
+    openGraph: {
+      title: post.title,
+      description,
+      type: "article",
+      publishedTime: post.publishedAt ?? undefined,
+      images,
+    },
+    twitter: {
+      card: images ? "summary_large_image" : "summary",
+      title: post.title,
+      description,
+      images,
+    },
+  }
+}
 
 export default async function PostDetailPage({
   params,
