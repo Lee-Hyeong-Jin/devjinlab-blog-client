@@ -5,8 +5,10 @@ import { ko } from "date-fns/locale"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { CommentThread } from "@/components/blog/comments/comment-thread"
 import { MarkdownViewer } from "@/components/blog/markdown-viewer-loader"
 import { isAdminEmail } from "@/lib/auth/is-admin"
+import { getCommentsByPostId } from "@/lib/blog/comments"
 import { getPublishedPostBySlug } from "@/lib/blog/posts"
 import { createClient } from "@/lib/supabase/server"
 
@@ -27,6 +29,7 @@ export default async function PostDetailPage({
     data: { user },
   } = await supabase.auth.getUser()
   const isAdmin = isAdminEmail(user?.email)
+  const comments = await getCommentsByPostId(post.id)
 
   return (
     <main className="mx-auto max-w-2xl px-4 py-12 sm:px-6">
@@ -90,6 +93,14 @@ export default async function PostDetailPage({
 
         <MarkdownViewer content={post.contentMd} />
       </article>
+
+      <CommentThread
+        postId={post.id}
+        postSlug={post.slug}
+        comments={comments}
+        currentUserId={user?.id ?? null}
+        isAdmin={isAdmin}
+      />
     </main>
   )
 }
