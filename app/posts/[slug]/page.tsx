@@ -4,8 +4,11 @@ import { format } from "date-fns"
 import { ko } from "date-fns/locale"
 
 import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import { MarkdownViewer } from "@/components/blog/markdown-viewer-loader"
+import { isAdminEmail } from "@/lib/auth/is-admin"
 import { getPublishedPostBySlug } from "@/lib/blog/posts"
+import { createClient } from "@/lib/supabase/server"
 
 export default async function PostDetailPage({
   params,
@@ -18,6 +21,12 @@ export default async function PostDetailPage({
   if (!post) {
     notFound()
   }
+
+  const supabase = await createClient()
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+  const isAdmin = isAdminEmail(user?.email)
 
   return (
     <main className="mx-auto max-w-2xl px-4 py-12 sm:px-6">
@@ -54,16 +63,29 @@ export default async function PostDetailPage({
             </div>
           )}
 
-          {post.publishedAt && (
-            <time
-              dateTime={post.publishedAt}
-              className="mt-4 block font-mono text-xs text-muted-foreground"
-            >
-              {format(new Date(post.publishedAt), "yyyy.MM.dd", {
-                locale: ko,
-              })}
-            </time>
-          )}
+          <div className="mt-4 flex items-center justify-between gap-2">
+            {post.publishedAt && (
+              <time
+                dateTime={post.publishedAt}
+                className="font-mono text-xs text-muted-foreground"
+              >
+                {format(new Date(post.publishedAt), "yyyy.MM.dd", {
+                  locale: ko,
+                })}
+              </time>
+            )}
+
+            {isAdmin && (
+              <Button
+                asChild
+                variant="outline"
+                size="sm"
+                className="font-mono text-xs"
+              >
+                <Link href={`/write/${post.id}`}>수정</Link>
+              </Button>
+            )}
+          </div>
         </header>
 
         <MarkdownViewer content={post.contentMd} />

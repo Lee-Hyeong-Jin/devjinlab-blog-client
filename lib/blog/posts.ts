@@ -132,6 +132,71 @@ export async function getPublishedPosts({
   }
 }
 
+export type AdminPostRecord = {
+  id: string
+  slug: string
+  title: string
+  excerpt: string | null
+  contentMd: string
+  coverImageUrl: string | null
+  categoryId: string | null
+  tagNames: string[]
+  status: "draft" | "published"
+}
+
+// Unlike getPublishedPostBySlug, this intentionally doesn't filter by
+// status — it's for the admin write flow (/write/[id]), where RLS itself
+// is what allows the admin to see drafts (posts_select_published_or_admin).
+export async function getPostById(id: string): Promise<AdminPostRecord | null> {
+  const supabase = await createClient()
+  const { data, error } = await supabase
+    .from("posts")
+    .select(
+      `
+        id,
+        slug,
+        title,
+        excerpt,
+        content_md,
+        cover_image_url,
+        category_id,
+        status,
+        post_tags(tags(name))
+      `
+    )
+    .eq("id", id)
+    .maybeSingle()
+
+  if (error) throw error
+  if (!data) return null
+
+  const row = data as unknown as {
+    id: string
+    slug: string
+    title: string
+    excerpt: string | null
+    content_md: string
+    cover_image_url: string | null
+    category_id: string | null
+    status: "draft" | "published"
+    post_tags: { tags: { name: string } | null }[]
+  }
+
+  return {
+    id: row.id,
+    slug: row.slug,
+    title: row.title,
+    excerpt: row.excerpt,
+    contentMd: row.content_md,
+    coverImageUrl: row.cover_image_url,
+    categoryId: row.category_id,
+    tagNames: row.post_tags
+      .map((postTag) => postTag.tags?.name)
+      .filter((name): name is string => Boolean(name)),
+    status: row.status,
+  }
+}
+
 export async function getPublishedPostBySlug(
   slug: string
 ): Promise<PostDetail | null> {
